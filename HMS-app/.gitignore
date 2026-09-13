@@ -13,7 +13,4 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
-<<<<<<< HEAD
 .env.example
-=======
->>>>>>> 02a6385bd315955646f0b015c2609bb1bf03d720
