@@ -6,6 +6,7 @@ use App\Models\Department;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ProjectController extends Controller
@@ -26,43 +27,55 @@ class ProjectController extends Controller
 
     
     public function showAppointments(Request $request){
-        $department_id = $request->input('department_id');
-        $appointments = Appointment::where('department_id', $department_id)->get();
-        return \view('appointments', ['appointments' =>$appointments]);
+        $departmentId = $request->input('department_id', $request->route('department'));
+        $appointments = Appointment::where('department_id', $departmentId)
+            ->orderBy('appointment_date')
+            ->get();
+
+        return view('appointments', ['appointments' => $appointments]);
 
 
     }
 
     public function bookAppointment(Request $request){
-    
-        $appointment_id = $request->input('appointment_id');
-        $department_name = $request->input('department_name');
-        $appointment_date = $request->input('appointment_date');
+        $validated = $request->validate([
+            'appointment_id' => ['required', 'integer', 'exists:appointments,id'],
+        ]);
 
-        $exists = Booking::where('appointment_id', '=',$appointment_id)->exists();
+        $appointment = DB::transaction(function () use ($validated) {
+            $appointment = Appointment::whereKey($validated['appointment_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        if($exists){
+            if ($appointment->taken || Booking::where('appointment_id', $appointment->id)->exists()) {
+                return null;
+            }
 
-            Session::flash('message','Appointment was already taken');
-            Session::flash('alert-class','alert-danger');
-            return redirect('/');
-        }else{
-            
             $booking = new Booking;
-            $booking->appointment_id = $appointment_id;
-            $booking->department_name = $department_name;
-            $booking->appointment_date = $appointment_date;
+            $booking->appointment_id = $appointment->id;
+            $booking->department_name = $appointment->department_name;
+            $booking->appointment_date = $appointment->appointment_date;
             $booking->username = Auth::user()->name;
-            $booking->user_id = Auth::user()->id;
-
+            $booking->user_id = Auth::id();
             $booking->save();
 
-            Session::flash('message','Appointment booked successfully');
-            Session::flash('alert-class','alert-sucess');
-            return redirect('/');
+            $appointment->update(['taken' => true]);
 
+            return $appointment;
+        });
 
+        if (!$appointment) {
+            $departmentId = Appointment::whereKey($validated['appointment_id'])->value('department_id');
 
+            return redirect()->route('appointmentSchedule', ['department' => $departmentId])->with([
+                'message' => 'That appointment was just booked. Please choose another time.',
+                'alert-class' => 'alert-warning',
+            ]);
         }
+
+        return redirect()->route('appointmentSchedule', ['department' => $appointment->department_id])->with([
+            'message' => 'Your appointment has been confirmed.',
+            'alert-class' => 'alert-success',
+        ]);
     }
 }

@@ -19,4 +19,8 @@ Route::get('/',[ProjectController::class,'getAllDepartments']);
 
 Route::post('/showAppointments', [ProjectController::class,'showAppointments'])->name('showAppointments')->middleware('auth');
 
+Route::get('/appointments/{department}', [ProjectController::class, 'showAppointments'])
+	->name('appointmentSchedule')
+	->middleware('auth');
+
 Route::post('/bookAppointments', [ProjectController::class,'bookAppointment'])->name('bookAppointments')->middleware('auth');
