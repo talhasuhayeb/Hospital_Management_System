@@ -15,8 +15,26 @@ use App\Http\Controllers\ProjectController;
 */
 
 
+<<<<<<< HEAD
 Route::get('/',[ProjectController::class,'getAllDepartments']);
 
 Route::post('/showAppointments', [ProjectController::class,'showAppointments'])->name('showAppointments')->middleware('auth');
 
 Route::post('/bookAppointments', [ProjectController::class,'bookAppointment'])->name('bookAppointments')->middleware('auth');
+=======
+Route::get('/',[ProjectController::class,'getAllDepartments'])->name('home');
+
+Route::post('/showAppointments', [ProjectController::class,'showAppointments'])->name('showAppointments')->middleware('auth');
+
+Route::post('/bookAppointments', [ProjectController::class,'bookAppointments'])->name('bookAppointments')->middleware('auth');
+
+Route::get('/myBookings' , [ProjectController::class, 'myBookings'])->name('myBookings')->middleware('auth');
+
+Route::post('/cancelBooking' , [ProjectController::class, 'cancelBooking'])->name('cancelBooking')->middleware('auth');
+
+
+
+Route::middleware(['auth:sanctum','verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+>>>>>>> 02a6385bd315955646f0b015c2609bb1bf03d720

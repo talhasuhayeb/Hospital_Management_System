@@ -33,7 +33,11 @@ class ProjectController extends Controller
 
     }
 
+<<<<<<< HEAD
     public function bookAppointment(Request $request){
+=======
+    public function bookAppointments(Request $request){
+>>>>>>> 02a6385bd315955646f0b015c2609bb1bf03d720
     
         $appointment_id = $request->input('appointment_id');
         $department_name = $request->input('department_name');
@@ -57,12 +61,40 @@ class ProjectController extends Controller
 
             $booking->save();
 
+<<<<<<< HEAD
             Session::flash('message','Appointment booked successfully');
             Session::flash('alert-class','alert-sucess');
+=======
+            Appointment::where('id',$appointment_id)->update(['taken'=>1]);
+
+            Session::flash('message','Appointment booked successfully');
+            Session::flash('alert-class','alert-success');
+>>>>>>> 02a6385bd315955646f0b015c2609bb1bf03d720
             return redirect('/');
 
 
 
         }
     }
+<<<<<<< HEAD
+=======
+
+
+    public function myBookings(Request $request){
+        $bookings = Booking::where('user_id',Auth::user()->id)->get();
+        return \view('myBookings',['bookings'=>$bookings]);
+    }
+
+    public function cancelBooking(Request $request){
+        $booking_id = $request->input('booking_id');
+        $appointment_id = $request->input('appointment_id');
+        Booking::where('id',$booking_id)->delete();
+
+        Appointment::where('id',$appointment_id)->update(['taken'=>0]);
+
+        Session::flash('message','Appointment cancelled successfully');
+            Session::flash('alert-class','alert-success');
+            return redirect('/');
+    }
+>>>>>>> 02a6385bd315955646f0b015c2609bb1bf03d720
 }
