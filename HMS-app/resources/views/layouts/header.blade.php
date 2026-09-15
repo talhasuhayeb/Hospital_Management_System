@@ -50,6 +50,13 @@
                 color: #ffffff;
             }
 
+            .site-navbar .logout-button {
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+                font: inherit;
+            }
+
             .site-navbar .navbar-toggler {
                 border-color: rgba(255, 255, 255, 0.35);
             }
@@ -74,11 +81,17 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto align-items-lg-center">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{{ url('/') }}">Home</a>
+                            <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif href="{{ url('/') }}">Home</a>
                         </li>
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('myBookings') }}">My Bookings</a>
+                                <a class="nav-link {{ request()->routeIs('myBookings') ? 'active' : '' }}" @if(request()->routeIs('myBookings')) aria-current="page" @endif href="{{ route('myBookings') }}">My Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="nav-link logout-button">Logout</button>
+                                </form>
                             </li>
                         @endauth
                     </ul>
