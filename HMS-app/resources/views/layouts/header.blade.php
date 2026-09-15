@@ -79,6 +79,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#departments">Departments</a>
                         </li>
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('myBookings') }}">My Bookings</a>
+                            </li>
+                        @endauth
                     </ul>
                 </div>
             </div>

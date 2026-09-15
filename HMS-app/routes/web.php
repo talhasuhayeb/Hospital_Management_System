@@ -24,3 +24,6 @@ Route::get('/appointments/{department}', [ProjectController::class, 'showAppoint
 	->middleware('auth');
 
 Route::post('/bookAppointments', [ProjectController::class,'bookAppointment'])->name('bookAppointments')->middleware('auth');
+
+Route::get('/my-bookings', [ProjectController::class, 'myBookings'])->name('myBookings')->middleware('auth');
+Route::post('/cancel-booking', [ProjectController::class, 'cancelBooking'])->name('cancelBooking')->middleware('auth');

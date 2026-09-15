@@ -57,6 +57,8 @@ class ProjectController extends Controller
             $booking->appointment_date = $appointment->appointment_date;
             $booking->username = Auth::user()->name;
             $booking->user_id = Auth::id();
+            $booking->status = 'pending';
+            $booking->taken = false;
             $booking->save();
 
             $appointment->update(['taken' => true]);
@@ -73,8 +75,47 @@ class ProjectController extends Controller
             ]);
         }
 
-        return redirect()->route('appointmentSchedule', ['department' => $appointment->department_id])->with([
-            'message' => 'Your appointment has been confirmed.',
+        return redirect()->route('myBookings')->with([
+            'message' => 'Your appointment request has been submitted. Please wait for admin approval.',
+            'alert-class' => 'alert-success',
+        ]);
+    }
+
+    public function myBookings()
+    {
+        $bookings = Booking::where('user_id', Auth::id())
+            ->orderByDesc('created_at')
+            ->get();
+
+        foreach ($bookings as $booking) {
+            $booking->status_label = $booking->taken ? 'Approved' : 'Pending approval';
+            $booking->status_class = $booking->taken ? 'success' : 'warning';
+        }
+
+        return view('myBookings', ['bookings' => $bookings]);
+    }
+
+    public function cancelBooking(Request $request)
+    {
+        $validated = $request->validate([
+            'booking_id' => ['required', 'integer', 'exists:bookings,booking_id'],
+        ]);
+
+        $booking = Booking::where('booking_id', $validated['booking_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        if ($booking->taken) {
+            return redirect()->route('myBookings')->with([
+                'message' => 'Approved appointments cannot be cancelled.',
+                'alert-class' => 'alert-warning',
+            ]);
+        }
+
+        $booking->delete();
+
+        return redirect()->route('myBookings')->with([
+            'message' => 'Your appointment has been cancelled.',
             'alert-class' => 'alert-success',
         ]);
     }
