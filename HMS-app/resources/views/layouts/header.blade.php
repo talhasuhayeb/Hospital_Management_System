@@ -57,6 +57,15 @@
                 font: inherit;
             }
 
+            .site-navbar .user-info {
+                margin: 0.2rem 0.2rem;
+                padding: 0.55rem 0.9rem;
+                color: #9fb3c8;
+                font-size: 0.9rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+
             .site-navbar .navbar-toggler {
                 border-color: rgba(255, 255, 255, 0.35);
             }
@@ -80,6 +89,11 @@
 
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto align-items-lg-center">
+                        @auth
+                            <li class="nav-item">
+                                <span class="user-info">{{ Auth::user()->name }} (ID: {{ Auth::user()->id }})</span>
+                            </li>
+                        @endauth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" @if(request()->is('/')) aria-current="page" @endif href="{{ url('/') }}">Home</a>
                         </li>
@@ -92,6 +106,10 @@
                                     @csrf
                                     <button type="submit" class="nav-link logout-button">Logout</button>
                                 </form>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('login') ? 'active' : '' }}" @if(request()->routeIs('login')) aria-current="page" @endif href="{{ route('login') }}">Log in</a>
                             </li>
                         @endauth
                     </ul>
