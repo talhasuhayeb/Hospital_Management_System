@@ -10,7 +10,7 @@
 @endphp
 
 <style>
-    .booking-page { min-height: calc(100vh - 80px); padding: 3rem 0 5rem; background: #f5f8fb; }
+    .booking-page { min-height: calc(100vh - 80px); padding: 3rem 0 5rem; background: #f5f8fb; font-family: 'Inter', sans-serif; }
     .booking-shell { max-width: 820px; margin: 0 auto; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid #e1e8ed; border-radius: 24px; background: #fff; box-shadow: 0 18px 45px rgba(16, 42, 67, .1); }
     .booking-eyebrow { margin-bottom: .5rem; color: #2cb1bc; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     .booking-title { margin: 0; color: #102a43; font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; }

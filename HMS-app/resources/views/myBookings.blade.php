@@ -7,6 +7,7 @@
         min-height: calc(100vh - 80px);
         padding: 3rem 0 5rem;
         background: #f5f8fb;
+        font-family: 'Inter', sans-serif;
     }
 
     .booking-shell {
