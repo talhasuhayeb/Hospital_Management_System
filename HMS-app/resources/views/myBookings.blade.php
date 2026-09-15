@@ -3,26 +3,48 @@
 @section('content')
 
 <style>
+    .booking-page {
+        min-height: calc(100vh - 80px);
+        padding: 3rem 0 5rem;
+        background: #f5f8fb;
+    }
+
     .booking-shell {
-        max-width: 1100px;
-        margin: 40px auto;
-        padding: 0 16px 60px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 0 16px;
     }
 
     .booking-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 2rem;
         gap: 20px;
         flex-wrap: wrap;
     }
 
+    .booking-eyebrow {
+        margin-bottom: .5rem;
+        color: #2cb1bc;
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
     .booking-header h2 {
         margin: 0;
-        color: #0f172a;
+        color: #102a43;
+        font-size: clamp(2rem, 5vw, 3rem);
         font-weight: 800;
-        letter-spacing: -0.04em;
+    }
+
+    .booking-header p {
+        max-width: 38rem;
+        margin: .75rem 0 0;
+        color: #627d98;
+        font-size: 1.05rem;
     }
 
     .booking-grid {
@@ -31,11 +53,11 @@
     }
 
     .booking-card {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 22px;
-        box-shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
-        padding: 24px;
+        background: #fff;
+        border: 1px solid #e1e8ed;
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(16, 42, 67, .1);
+        padding: clamp(1.25rem, 3vw, 1.75rem);
     }
 
     .booking-top {
@@ -48,7 +70,7 @@
     }
 
     .booking-id {
-        color: #475569;
+        color: #243b53;
         font-weight: 700;
         letter-spacing: 0.02em;
     }
@@ -65,13 +87,13 @@
     }
 
     .status-approved {
-        background: rgba(16, 185, 129, 0.12);
-        color: #047857;
+        background: #e6fffa;
+        color: #135e5e;
     }
 
     .status-pending {
-        background: rgba(245, 158, 11, 0.12);
-        color: #b45309;
+        background: #fff4db;
+        color: #8d5b13;
     }
 
     .booking-meta {
@@ -82,9 +104,9 @@
     }
 
     .meta-box {
-        background: #fff;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
+        background: #f0f4f8;
+        border: 1px solid #e1e8ed;
+        border-radius: 14px;
         padding: 14px 16px;
     }
 
@@ -93,14 +115,14 @@
         font-size: 0.76rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: #64748b;
+        color: #627d98;
         margin-bottom: 6px;
     }
 
     .meta-value {
         font-size: 1.05rem;
         font-weight: 700;
-        color: #0f172a;
+        color: #102a43;
     }
 
     .booking-actions {
@@ -112,11 +134,16 @@
     .cancel-btn {
         border: none;
         border-radius: 12px;
-        background: linear-gradient(135deg, #ef4444, #dc2626);
+        background: #c05640;
         color: #fff;
         padding: 0.8rem 1.2rem;
         font-weight: 700;
-        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        box-shadow: 0 8px 16px rgba(192, 86, 64, .18);
+    }
+
+    .cancel-btn:hover,
+    .cancel-btn:focus {
+        background: #a94432;
     }
 
     .cancel-btn:disabled {
@@ -125,32 +152,57 @@
     }
 
     .empty-state {
-        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-        border: 1px solid rgba(148, 163, 184, 0.2);
-        border-radius: 22px;
-        box-shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
-        padding: 42px 24px;
+        background: #fff;
+        border: 1px solid #e1e8ed;
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(16, 42, 67, .1);
+        padding: 3rem 24px;
         text-align: center;
-        color: #475569;
+        color: #627d98;
     }
 
     .empty-state a {
         display: inline-block;
         margin-top: 16px;
-        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        background: #102a43;
         color: white;
-        border-radius: 999px;
+        border-radius: 12px;
         padding: 0.75rem 1.2rem;
         text-decoration: none;
         font-weight: 700;
     }
+
+    .empty-state a:hover,
+    .empty-state a:focus {
+        background: #2cb1bc;
+        color: #102a43;
+    }
+
+    .booking-header .btn-primary {
+        border: 0;
+        border-radius: 12px;
+        background: #102a43;
+        padding: .8rem 1.2rem;
+        font-weight: 800;
+    }
+
+    .booking-header .btn-primary:hover,
+    .booking-header .btn-primary:focus {
+        background: #2cb1bc;
+        color: #102a43;
+    }
 </style>
 
-<div class="booking-shell">
-    <div class="booking-header">
-        <h2>My Appointment Status</h2>
-        <a href="{{ route('appointmentSchedule', ['department' => 1]) }}" class="btn btn-primary">Book another appointment</a>
-    </div>
+<main class="booking-page">
+    <div class="booking-shell">
+        <div class="booking-header">
+            <div>
+                <div class="booking-eyebrow">Patient portal</div>
+                <h2>My Appointment Status</h2>
+                <p>Review your upcoming appointments and keep track of approval status.</p>
+            </div>
+            <a href="{{ route('appointmentSchedule', ['department' => 1]) }}" class="btn btn-primary">Book another appointment</a>
+        </div>
 
     @if(session('message'))
         <div class="alert {{ session('alert-class', 'alert-info') }} mb-4">
@@ -210,6 +262,7 @@
             @endforeach
         </div>
     @endif
-</div>
+    </div>
+</main>
 
 @endsection
