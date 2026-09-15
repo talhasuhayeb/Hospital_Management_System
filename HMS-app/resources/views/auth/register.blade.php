@@ -16,7 +16,27 @@
 
             <div class="mt-4">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
+                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required placeholder="email address" />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label for="date_of_birth" value="{{ __('Date of Birth') }}" />
+                <x-jet-input id="date_of_birth" class="block mt-1 w-full" type="date" name="date_of_birth" :value="old('date_of_birth')" required />
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label for="blood_group" value="{{ __('Blood Group') }}" />
+                <select id="blood_group" name="blood_group" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" required>
+                    <option value="">Select blood group</option>
+                    @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bloodGroup)
+                        <option value="{{ $bloodGroup }}" @selected(old('blood_group') === $bloodGroup)>{{ $bloodGroup }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <x-jet-label for="phone" value="{{ __('Phone') }}" />
+                <x-jet-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone', '+880')" required autocomplete="tel" placeholder="+8801XXXXXXXXX" pattern="\+8801[3-9][0-9]{8}" minlength="14" maxlength="14" title="Enter an 11-digit Bangladesh mobile number starting with +880, for example +8801712345678" />
             </div>
 
             <div class="mt-4">
@@ -57,4 +77,15 @@
             </div>
         </form>
     </x-jet-authentication-card>
+
+    <script>
+        const phoneInput = document.getElementById('phone');
+
+        phoneInput.addEventListener('input', function () {
+            const digits = this.value.replace(/\D/g, '');
+            const localNumber = digits.startsWith('880') ? digits.slice(3) : digits;
+
+            this.value = '+880' + localNumber.slice(0, 10);
+        });
+    </script>
 </x-guest-layout>
