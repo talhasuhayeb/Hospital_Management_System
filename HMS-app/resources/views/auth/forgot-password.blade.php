@@ -21,7 +21,12 @@
 
             <div class="block">
                 <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+                @if(request('email'))
+                    <x-jet-input id="email" class="block mt-1 w-full bg-gray-100 cursor-not-allowed" type="email" :value="request('email')" placeholder="email address" autocomplete="email" disabled aria-disabled="true" title="This email was provided from the login page." />
+                    <input type="hidden" name="email" value="{{ request('email') }}">
+                @else
+                    <x-jet-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="email" placeholder="email address" />
+                @endif
             </div>
 
             <div class="flex items-center justify-end mt-4">

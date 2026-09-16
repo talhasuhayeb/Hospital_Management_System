@@ -208,7 +208,7 @@
                             </label>
 
                             @if (Route::has('password.request'))
-                                <a class="login-link" href="{{ route('password.request') }}">{{ __('Forgot password?') }}</a>
+                                <a id="forgot-password-link" class="login-link" href="{{ route('password.request') }}">{{ __('Forgot password?') }}</a>
                             @endif
                         </div>
 
@@ -225,4 +225,20 @@
             </section>
         </div>
     </main>
+
+    <script>
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const loginEmailInput = document.getElementById('email');
+
+        if (forgotPasswordLink && loginEmailInput) {
+            forgotPasswordLink.addEventListener('click', function (event) {
+                const email = loginEmailInput.value.trim();
+
+                if (email) {
+                    event.preventDefault();
+                    window.location.assign(`${this.href}?email=${encodeURIComponent(email)}`);
+                }
+            });
+        }
+    </script>
 </x-guest-layout>
