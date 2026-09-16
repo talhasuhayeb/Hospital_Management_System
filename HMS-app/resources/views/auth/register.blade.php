@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Register">
     <style>
         .register-page { min-height: 100vh; padding: 2rem 1rem; background: #f5f8fb; }
         .register-shell { display: grid; max-width: 1080px; margin: 0 auto; overflow: hidden; border: 1px solid #e1e8ed; border-radius: 24px; background: #fff; box-shadow: 0 22px 55px rgba(16, 42, 67, .13); }
