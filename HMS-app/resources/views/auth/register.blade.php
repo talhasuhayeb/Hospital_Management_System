@@ -9,7 +9,9 @@
         .register-visual p { margin: 1rem 0 0; color: #e6fffa; font-size: 1.05rem; line-height: 1.65; }
         .register-form-panel { padding: clamp(1.5rem, 5vw, 3.5rem); }
         .register-form-wrap { max-width: 34rem; margin: 0 auto; }
-        .register-brand { display: inline-flex; width: 3rem; height: 3rem; align-items: center; justify-content: center; margin-bottom: 1.25rem; border-radius: 14px; background: #2cb1bc; color: #102a43; font-size: 1.5rem; font-weight: 800; }
+        .register-brand-row { display: flex; align-items: flex-end; gap: 0; margin-bottom: 1.25rem; color: #2cb1bc; font-size: 1rem; font-weight: 800; letter-spacing: .1em; }
+        .register-brand { display: block; width: 4rem; height: 4rem; margin-right: -.1rem; object-fit: contain; }
+        .register-brand-row span { margin-bottom: .55rem; }
         .register-title { margin: 0; color: #102a43; font-size: clamp(1.8rem, 4vw, 2.35rem); font-weight: 800; line-height: 1.05; }
         .register-copy { margin: .6rem 0 2rem; color: #627d98; }
         .register-label { display: block; margin-bottom: .45rem; color: #243b53; font-size: .9rem; font-weight: 800; }
@@ -27,7 +29,6 @@
         <div class="register-shell">
             <section class="register-visual" aria-label="Healthcare registration">
                 <div class="register-visual-content">
-                    <div class="register-eyebrow">eAppointment Care</div>
                     <h1>Start your care journey.</h1>
                     <p>Create your patient account to find departments, reserve appointments, and keep your care organized.</p>
                 </div>
@@ -35,7 +36,10 @@
 
             <section class="register-form-panel">
                 <div class="register-form-wrap">
-                    <div class="register-brand" aria-hidden="true">+</div>
+                    <div class="register-brand-row">
+                        <img class="register-brand" src="{{ asset('assets/logo.png') }}" alt="eAppointment Care logo">
+                        <span>eAppointment Care</span>
+                    </div>
                     <h2 class="register-title">Create your patient account</h2>
                     <p class="register-copy">Add your details to get started with eAppointment Care.</p>
 

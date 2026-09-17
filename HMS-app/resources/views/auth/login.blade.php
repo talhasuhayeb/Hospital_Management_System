@@ -81,6 +81,10 @@
             font-weight: 800;
         }
 
+        .login-brand-row { display: flex; align-items: flex-end; gap: 0; margin-bottom: 1.25rem; color: #2cb1bc; font-size: 1rem; font-weight: 800; letter-spacing: .1em; }
+        .login-brand-logo { width: 4rem; height: 4rem; margin-right: -.1rem; object-fit: contain; }
+        .login-brand-row span { margin-bottom: .55rem; }
+
         .login-title {
             margin: 0;
             color: #102a43;
@@ -168,7 +172,6 @@
         <div class="login-shell">
             <section class="login-visual" aria-label="Healthcare welcome">
                 <div class="login-visual-content">
-                    <div class="login-eyebrow">eAppointment Care</div>
                     <h1>Care that fits your life.</h1>
                     <p>Connect with the right department, choose a convenient time, and keep your appointments close at hand.</p>
                 </div>
@@ -176,7 +179,10 @@
 
             <section class="login-form-panel">
                 <div class="login-form-wrap">
-                    <div class="login-brand" aria-hidden="true">+</div>
+                    <div class="login-brand-row">
+                        <img class="login-brand-logo" src="{{ asset('assets/logo.png') }}" alt="eAppointment Care logo">
+                        <span>eAppointment Care</span>
+                    </div>
                     <h2 class="login-title">Access your care portal</h2>
                     <p class="login-copy">Sign in to manage your appointments.</p>
 

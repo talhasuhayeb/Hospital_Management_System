@@ -9,7 +9,9 @@
         .reset-visual p { margin: 1rem 0 0; color: #e6fffa; font-size: 1.05rem; line-height: 1.65; }
         .reset-form-panel { display: flex; align-items: center; padding: clamp(1.5rem, 5vw, 4rem); }
         .reset-form-wrap { width: 100%; max-width: 27rem; margin: 0 auto; }
-        .reset-brand { display: inline-flex; width: 3rem; height: 3rem; align-items: center; justify-content: center; margin-bottom: 1.25rem; border-radius: 14px; background: #2cb1bc; color: #102a43; font-size: 1.5rem; font-weight: 800; }
+        .reset-brand-row { display: flex; align-items: flex-end; gap: 0; margin-bottom: 1.25rem; color: #2cb1bc; font-size: 1rem; font-weight: 800; letter-spacing: .1em; }
+        .reset-brand { display: block; width: 4rem; height: 4rem; margin-right: -.1rem; object-fit: contain; }
+        .reset-brand-row span { margin-bottom: .55rem; }
         .reset-title { margin: 0; color: #102a43; font-size: clamp(1.8rem, 4vw, 2.35rem); font-weight: 800; line-height: 1.05; }
         .reset-copy { margin: .6rem 0 2rem; color: #627d98; line-height: 1.6; }
         .reset-label { display: block; margin-bottom: .45rem; color: #243b53; font-size: .9rem; font-weight: 800; }
@@ -27,7 +29,6 @@
         <div class="reset-shell">
             <section class="reset-visual" aria-label="Password recovery">
                 <div class="reset-visual-content">
-                    <div class="reset-eyebrow">eAppointment Care</div>
                     <h1>Keep your care within reach.</h1>
                     <p>Reset your password securely and return to managing your appointments with confidence.</p>
                 </div>
@@ -35,7 +36,10 @@
 
             <section class="reset-form-panel">
                 <div class="reset-form-wrap">
-                    <div class="reset-brand" aria-hidden="true">+</div>
+                    <div class="reset-brand-row">
+                        <img class="reset-brand" src="{{ asset('assets/logo.png') }}" alt="eAppointment Care logo">
+                        <span>eAppointment Care</span>
+                    </div>
                     <h2 class="reset-title">Reset your password</h2>
                     <p class="reset-copy">Enter your registered email and we will send you a secure password reset link.</p>
 

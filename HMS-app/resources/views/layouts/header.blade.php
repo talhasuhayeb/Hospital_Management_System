@@ -37,6 +37,14 @@
                 font-weight: 800;
             }
 
+            .site-navbar .brand-logo {
+                display: block;
+                width: 3.9rem;
+                height: 3.9rem;
+                margin-right: 0.15rem;
+                object-fit: contain;
+            }
+
             .site-navbar .nav-link {
                 margin: 0.2rem 0.2rem;
                 padding: 0.55rem 0.9rem !important;
@@ -83,7 +91,7 @@
         <nav class="navbar navbar-expand-lg site-navbar" aria-label="Main navigation">
             <div class="container-lg py-2">
                 <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
-                    <span class="brand-mark" aria-hidden="true">+</span>
+                    <img class="brand-logo" src="{{ asset('assets/logo.png') }}" alt="eAppointment Care logo">
                     eAppointment Care
                 </a>
 
