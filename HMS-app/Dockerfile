@@ -1,5 +1,5 @@
-# Use PHP 8.1 with Apache (Compatible with Laravel 8)
-FROM php:8.1-apache
+# Use PHP 8.2 with Apache (Fixes Composer lock PHP requirement)
+FROM php:8.2-apache
 
 # Install system dependencies and Node.js (for frontend compilation)
 RUN apt-get update && apt-get install -y \
