@@ -47,3 +47,6 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 # Render automatically exposes port 80/8080. Apache listens on 80 by default.
 EXPOSE 80
 
+# Run database migrations automatically, then start the Apache server
+CMD php artisan migrate --force && apache2-foreground
+
