@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Force HTTPS in production (Fixes 'connection not secure' errors on Render)
+        if (config('app.env') === 'production') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }
