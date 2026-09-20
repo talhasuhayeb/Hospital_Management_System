@@ -48,5 +48,5 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 EXPOSE 80
 
 # Run database migrations automatically, then start the Apache server
-CMD php artisan migrate --force && apache2-foreground
+CMD php artisan migrate --force && php artisan db:seed --class=DoctorAndAppointmentSeeder --force && apache2-foreground
 

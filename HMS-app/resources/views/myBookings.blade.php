@@ -235,6 +235,14 @@
                             <span class="meta-label">Department</span>
                             <span class="meta-value">{{ $booking->department_name }}</span>
                         </div>
+                        
+                        <div class="meta-box">
+                            <span class="meta-label">Specialist</span>
+                            <span class="meta-value">{{ $booking->doctor_name ?? 'Not assigned' }}</span>
+                            @if($booking->doctor)
+                                <div style="font-size: 0.8rem; color: #627d98; margin-top: 4px;">{{ $booking->doctor->qualification }}</div>
+                            @endif
+                        </div>
 
                         <div class="meta-box">
                             <span class="meta-label">Appointment ID</span>

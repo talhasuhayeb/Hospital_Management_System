@@ -28,13 +28,12 @@ class ProjectController extends Controller
     
     public function showAppointments(Request $request){
         $departmentId = $request->input('department_id', $request->route('department'));
-        $appointments = Appointment::where('department_id', $departmentId)
-            ->orderBy('appointment_date')
-            ->get();
+        $department = Department::with(['doctors.appointments' => function ($query) {
+            $query->where('appointment_date', '>=', now())
+                  ->orderBy('appointment_date');
+        }])->findOrFail($departmentId);
 
-        return view('appointments', ['appointments' => $appointments]);
-
-
+        return view('appointments', ['department' => $department]);
     }
 
     public function bookAppointment(Request $request){
@@ -54,6 +53,10 @@ class ProjectController extends Controller
             $booking = new Booking;
             $booking->appointment_id = $appointment->id;
             $booking->department_name = $appointment->department_name;
+            if ($appointment->doctor) {
+                $booking->doctor_id = $appointment->doctor_id;
+                $booking->doctor_name = $appointment->doctor->name;
+            }
             $booking->appointment_date = $appointment->appointment_date;
             $booking->username = Auth::user()->name;
             $booking->user_id = Auth::id();

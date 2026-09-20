@@ -19,9 +19,16 @@ class Booking extends Model
         'appointment_date',
         'status',
         'taken',
+        'doctor_id',
+        'doctor_name',
     ];
 
     protected $casts = [
         'taken' => 'boolean',
     ];
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
 }

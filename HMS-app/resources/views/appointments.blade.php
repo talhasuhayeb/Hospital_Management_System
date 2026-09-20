@@ -3,9 +3,13 @@
 @section('content')
 
 @php
-    $availableAppointments = $appointments->where('taken', false);
-    $dateGroups = $availableAppointments->groupBy(function ($appointment) {
-        return \Carbon\Carbon::parse($appointment->appointment_date)->format('Y-m-d');
+    $doctors = $department->doctors->map(function ($doctor) {
+        return [
+            'id' => $doctor->id,
+            'name' => $doctor->name,
+            'qualification' => $doctor->qualification,
+            'appointments' => $doctor->appointments->where('taken', false)->values()
+        ];
     });
 @endphp
 
@@ -27,37 +31,47 @@
     .booking-submit:hover, .booking-submit:focus { background: #2cb1bc; }
     .booking-submit:disabled { background: #bcccdc; cursor: not-allowed; }
     .booking-empty { padding: 1.25rem; border-radius: 14px; background: #f0f4f8; color: #627d98; }
+    .doc-qualification { font-size: 0.85rem; color: #627d98; font-weight: normal; }
 </style>
 
 <main class="booking-page">
     <div class="container-lg">
         <section class="booking-shell">
-            <div class="booking-eyebrow">Simple, flexible scheduling</div>
+            <div class="booking-eyebrow">{{ $department->name }}</div>
             <h1 class="booking-title">Book an appointment</h1>
-            <p class="booking-copy">Choose a date and an available 30-minute time. Your appointment is reserved when you confirm the booking.</p>
+            <p class="booking-copy">Select a specialist, choose a convenient date, and pick an available 30-minute slot.</p>
 
             @if (session('message'))
                 <div class="alert {{ session('alert-class', 'alert-info') }} booking-alert" role="alert">{{ session('message') }}</div>
             @endif
 
-            @if ($availableAppointments->isEmpty())
-                <div class="booking-empty">There are no available appointments for this department.</div>
+            @if ($doctors->isEmpty())
+                <div class="booking-empty">There are no doctors currently available in this department.</div>
             @else
                 <form method="post" action="{{ route('bookAppointments') }}" class="booking-form" id="booking-form">
                     @csrf
                     <div>
-                        <label class="booking-label" for="appointment-date">1. Choose a date</label>
-                        <select class="form-select booking-select" id="appointment-date" aria-label="Choose appointment date">
-                            <option value="">Select a date</option>
-                            @foreach($dateGroups as $date => $dateAppointments)
-                                @php($dateValue = \Carbon\Carbon::parse($date))
-                                <option value="{{ $date }}">{{ $dateValue->format('l, F j, Y') }} ({{ $dateAppointments->count() }} available)</option>
+                        <label class="booking-label" for="doctor-id">1. Choose a specialist</label>
+                        <select class="form-select booking-select" id="doctor-id" aria-label="Choose a specialist">
+                            <option value="">Select a doctor</option>
+                            @foreach($doctors as $doctor)
+                                <option value="{{ $doctor['id'] }}">{{ $doctor['name'] }}</option>
                             @endforeach
+                        </select>
+                        <div id="doctor-qualification" style="display: none; margin-top: 8px; padding: 10px; background: #eaf1f8; border-radius: 8px; color: #102a43; font-size: 0.95rem;">
+                            <strong>Qualification:</strong> <span id="qualification-text"></span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="booking-label" for="appointment-date">2. Choose a date</label>
+                        <select class="form-select booking-select" id="appointment-date" aria-label="Choose appointment date" disabled>
+                            <option value="">Select a doctor first</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="booking-label" for="appointment-id">2. Choose a time</label>
+                        <label class="booking-label" for="appointment-id">3. Choose a time</label>
                         <select class="form-select booking-select" id="appointment-id" name="appointment_id" disabled required>
                             <option value="">Select a date first</option>
                         </select>
@@ -77,31 +91,83 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const doctorSelect = document.getElementById('doctor-id');
         const dateSelect = document.getElementById('appointment-date');
         const timeSelect = document.getElementById('appointment-id');
         const submitButton = document.getElementById('booking-submit');
         const summary = document.getElementById('booking-summary');
         const summaryText = document.getElementById('booking-summary-text');
-        const appointments = @json($availableAppointments->values());
+        
+        const doctorsData = @json($doctors);
+        let selectedDoctorAppointments = [];
 
-        if (!dateSelect) return;
+        if (!doctorSelect) return;
+
+        doctorSelect.addEventListener('change', function () {
+            const doctorId = this.value;
+            dateSelect.innerHTML = '<option value="">Select a date</option>';
+            timeSelect.innerHTML = '<option value="">Select a date first</option>';
+            
+            dateSelect.disabled = !doctorId;
+            timeSelect.disabled = true;
+            submitButton.disabled = true;
+            summary.classList.remove('is-visible');
+            
+            const qualDiv = document.getElementById('doctor-qualification');
+            const qualText = document.getElementById('qualification-text');
+
+            if (!doctorId) {
+                if (qualDiv) qualDiv.style.display = 'none';
+                return;
+            }
+
+            const selectedDoctor = doctorsData.find(d => d.id == doctorId);
+            
+            if (qualDiv && selectedDoctor) {
+                qualText.textContent = selectedDoctor.qualification;
+                qualDiv.style.display = 'block';
+            }
+
+            selectedDoctorAppointments = selectedDoctor ? selectedDoctor.appointments : [];
+            
+            // Group appointments by date
+            const dates = {};
+            selectedDoctorAppointments.forEach(app => {
+                const dateStr = app.appointment_date.slice(0, 10);
+                dates[dateStr] = (dates[dateStr] || 0) + 1;
+            });
+
+            if (Object.keys(dates).length === 0) {
+                dateSelect.innerHTML = '<option value="">No dates available</option>';
+                dateSelect.disabled = true;
+                return;
+            }
+
+            Object.keys(dates).sort().forEach(date => {
+                const dateObj = new Date(date);
+                const dateFormatted = dateObj.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = `${dateFormatted} (${dates[date]} available)`;
+                dateSelect.appendChild(option);
+            });
+        });
 
         dateSelect.addEventListener('change', function () {
             const selectedDate = this.value;
-            timeSelect.innerHTML = '';
+            timeSelect.innerHTML = '<option value="">Select an available time</option>';
+            
             timeSelect.disabled = !selectedDate;
             submitButton.disabled = true;
             summary.classList.remove('is-visible');
 
-            if (!selectedDate) {
-                timeSelect.innerHTML = '<option value="">Select a date first</option>';
-                return;
-            }
+            if (!selectedDate) return;
 
-            timeSelect.innerHTML = '<option value="">Select an available time</option>';
-            appointments.filter(function (appointment) {
+            const availableTimes = selectedDoctorAppointments.filter(function (appointment) {
                 return appointment.appointment_date.slice(0, 10) === selectedDate;
-            }).forEach(function (appointment) {
+            });
+
+            availableTimes.forEach(function (appointment) {
                 const time = new Date(appointment.appointment_date.replace(' ', 'T'));
                 const option = document.createElement('option');
                 option.value = appointment.id;
@@ -111,9 +177,10 @@
         });
 
         timeSelect.addEventListener('change', function () {
-            const selected = appointments.find(function (appointment) {
-                return String(appointment.id) === this.value;
-            }, this);
+            const selectedId = this.value;
+            const selected = selectedDoctorAppointments.find(function (appointment) {
+                return String(appointment.id) === selectedId;
+            });
 
             if (!selected) {
                 submitButton.disabled = true;
@@ -121,10 +188,12 @@
                 return;
             }
 
+            const doctorName = doctorSelect.options[doctorSelect.selectedIndex].text;
             const time = new Date(selected.appointment_date.replace(' ', 'T'));
             summaryText.textContent = time.toLocaleString([], {
                 weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit'
-            }) + ' · 30 minutes';
+            }) + ' with ' + doctorName;
+            
             summary.classList.add('is-visible');
             submitButton.disabled = false;
         });
