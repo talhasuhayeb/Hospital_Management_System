@@ -202,7 +202,9 @@
                 <h2>My Appointment Status</h2>
                 <p>Review your upcoming appointments and keep track of approval status.</p>
             </div>
-            <a href="{{ route('appointmentSchedule', ['department' => 1]) }}" class="btn btn-primary">Book another appointment</a>
+            @if(!$bookings->isEmpty())
+                <a href="{{ url('/#departments') }}" class="btn btn-primary">Book another appointment</a>
+            @endif
         </div>
 
     @if(session('message'))
@@ -215,7 +217,7 @@
         <div class="empty-state">
             <h4 class="mb-2">No appointment booked yet</h4>
             <p>Book a department appointment to see your status here.</p>
-            <a href="{{ url('/') }}">Go to Departments</a>
+            <a href="{{ url('/#departments') }}">Go to Departments</a>
         </div>
     @else
         <div class="booking-grid">
