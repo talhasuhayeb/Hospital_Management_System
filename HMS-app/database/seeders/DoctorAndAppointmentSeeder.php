@@ -7,24 +7,33 @@ use App\Models\Department;
 use App\Models\Doctor;
 use App\Models\Appointment;
 use Carbon\Carbon;
-use Faker\Factory as Faker;
 
 class DoctorAndAppointmentSeeder extends Seeder
 {
     public function run()
     {
-        $faker = Faker::create();
         $departments = Department::all();
-
-        // Optional qualifications to randomly assign
         $qualifications = ['MBBS, MD', 'MBBS, FCPS', 'MBBS, MS', 'DO, Board Certified', 'MBBS, MRCP'];
+        
+        $firstNames = [
+            'Arif', 'Tariq', 'Sajid', 'Rakib', 'Faisal', 'Zahid', 'Imran', 'Kamrul', 'Hasan', 'Shafiq',
+            'Nusrat', 'Sadia', 'Farhana', 'Tania', 'Saima', 'Ayesha', 'Fatema', 'Nazmul', 'Aminul', 'Habib'
+        ];
+        
+        $lastNames = [
+            'Rahman', 'Ahmed', 'Hossain', 'Islam', 'Chowdhury', 'Karim', 'Ali', 'Akter', 'Khan', 
+            'Mahmud', 'Uddin', 'Alam', 'Haque', 'Siddique', 'Talukder', 'Bhuiyan', 'Sheikh'
+        ];
 
         foreach ($departments as $department) {
             // Create 3 doctors for each department
             for ($i = 0; $i < 3; $i++) {
+                $firstName = $firstNames[array_rand($firstNames)];
+                $lastName = $lastNames[array_rand($lastNames)];
+                
                 $doctor = Doctor::create([
-                    'name' => 'Dr. ' . $faker->lastName,
-                    'qualification' => $faker->randomElement($qualifications),
+                    'name' => 'Dr. ' . $firstName . ' ' . $lastName,
+                    'qualification' => $qualifications[array_rand($qualifications)],
                     'department_id' => $department->id,
                 ]);
 
