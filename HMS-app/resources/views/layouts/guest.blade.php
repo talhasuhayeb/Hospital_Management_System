@@ -8,6 +8,12 @@
 
     <title>{{ $title }}</title>
 
+    <!-- Favicons for all devices -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
