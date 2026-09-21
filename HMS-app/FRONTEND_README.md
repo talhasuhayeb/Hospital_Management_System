@@ -210,8 +210,4 @@ npm run prod
 npm run production
 ```
 
----
 
-## 📄 License
-
-Currently, no license is explicitly specified in the repository. Please refer to the repository owner for usage rights and permissions.
